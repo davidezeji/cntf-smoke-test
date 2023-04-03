@@ -11,7 +11,7 @@ Project Structure:
 |           └── variables.tf
 |           └── outputs.tf 
 |   ├── application
-|	       
+|	      └── README.md
 |	     
 ├── free5GC                          contains infrastructure-as-code and helm configurations for free5gc
 |   ├── infrastructure
@@ -22,7 +22,7 @@ Project Structure:
 |           └── outputs.tf 
 |
 |   ├── application
-|
+|       └── README.md
 |
 ├── magma                            contains infrastructure-as-code and helm configurations for magma
 |   ├── infrastructure
@@ -33,4 +33,5 @@ Project Structure:
 |           └── outputs.tf 
 |    
 |   ├── application
+|       └── README.md
 ```
