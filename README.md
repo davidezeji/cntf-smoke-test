@@ -3,7 +3,7 @@ Source code repository for CNTF configurations
 
 Project Structure:
 ```
-├── open5GS                          contains infrastructure-as-code and helm configurations for open5gs
+├── open5gs                          contains infrastructure-as-code and helm configurations for open5gs
 │   ├── infrastructure
 |      	├── eks
 |           └── provider.tf
@@ -13,7 +13,7 @@ Project Structure:
 |   ├── application
 |	      └── README.md
 |	     
-├── free5GC                          contains infrastructure-as-code and helm configurations for free5gc
+├── free5gc                          contains infrastructure-as-code and helm configurations for free5gc
 |   ├── infrastructure
 |       ├── eks
 |           └── provider.tf
