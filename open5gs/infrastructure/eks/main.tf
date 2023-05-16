@@ -1,23 +1,18 @@
 # Create EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.cluster_name
-  role_arn = aws_iam_role.eks_worker_nodes_role.arn
+  role_arn = var.marketplace-eks-role
   vpc_config {
-    subnet_ids = [var.subnet_id]
+    subnet_ids = var.subnet_ids [*]
   }
-  depends_on = [
-    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
-    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
-  ]
 }
 
 # Create EKS node group
 resource "aws_eks_node_group" "eks_node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "eks_node_group"
-  node_role_arn   = aws_iam_role.eks_worker_nodes_role.arn
-  subnet_ids      = [var.subnet_id]
+  node_role_arn   = var.marketplace-eks-role
+  subnet_ids      = var.subnet_ids [*]
 
   tags = {
     Terraform   = "true"
@@ -29,21 +24,6 @@ resource "aws_eks_node_group" "eks_node_group" {
     desired_size = var.desired_size
     max_size     = var.max_size
     min_size     = var.min_size
-  }
-}
-
-resource "aws_launch_template" "eks-launch-template" {
-  name_prefix              = "${var.cluster_name}-launch-template"
-  image_id                 = var.image_id
-  instance_type            = var.instance_type
-  key_name                 = "example-key-pair"
-  vpc_security_group_ids   = ["${aws_security_group.eks-node-sg.id}"]
-
-  tag_specifications {
-    resource_type = "instance"
-    tags = {
-      Name = "example-instance"
-    }
   }
 }
 
@@ -70,40 +50,25 @@ resource "aws_security_group" "eks-node-sg" {
   }
 }
 
-# Create IAM role for EKS worker nodes
-resource "aws_iam_role" "eks_worker_nodes_role" {
-  name = "eks_worker_nodes_role"
+resource "aws_launch_template" "eks-launch-template" {
+  name_prefix            = "${var.cluster_name}-launch-template"
+  image_id               = var.image_id
+  instance_type          = var.instance_type
+  key_name               = "example-key-pair"
+  vpc_security_group_ids = ["${aws_security_group.eks-node-sg.id}"]
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "example-instance"
+    }
+  }
 }
 
-# Attach IAM policies to EKS worker nodes role
-resource "aws_iam_role_policy_attachment" "AmazonEKSWorkerNodePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.eks_worker_nodes_role.name
+module "aws_ebs_csi_driver_resources" {
+  source                           = "github.com/andreswebs/terraform-aws-eks-ebs-csi-driver//modules/resources"
+  cluster_name                     = var.cluster_name
+  iam_role_arn                     = var.aws_ebs_csi_driver_iam_role_arn
+  chart_version_aws_ebs_csi_driver = var.chart_version_aws_ebs_csi_driver
 }
-
-resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.eks_worker_nodes_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.eks_worker_nodes_role.name
-}
-
-
 
