@@ -14,8 +14,8 @@ variable "vpc_id" {
 }
 
 variable "subnet_id" {
-  type    = string
-  default = "subnet-0ebdfa23a1ac3f9a6"
+  type    = list(any)
+  default = ["subnet-0ebdfa23a1ac3f9a6", "subnet-09d5db76f3f1e66d5"]
 }
 
 variable "desired_size" {
@@ -34,11 +34,16 @@ variable "max_size" {
 }
 
 variable "image_id" {
-    type = string
-    default = "ami-00c39f71452c08778"
+  type    = string
+  default = "ami-00c39f71452c08778"
 }
 
 variable "instance_type" {
-    type = string
-    default = "t2.large"
+  type    = string
+  default = "t2.large"
+}
+
+variable "marketplace-eks-role" {
+  type    = string
+  default = "arn:aws:iam::827704904976:role/marketplace-eks-role"
 }
