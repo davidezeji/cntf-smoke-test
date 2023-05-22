@@ -14,6 +14,7 @@ variable "vpc_id" {
 }
 
 variable "subnet_ids" {
+
   type    = list(any)
   default = ["subnet-0ebdfa23a1ac3f9a6", "subnet-09d5db76f3f1e66d5"]
 }
