@@ -7,10 +7,11 @@ include:
 
 stages:
   - validate
+  - test
   - build
   - deploy
   - cleanup 
-  - test
+  - kics_test
   - install_open5gs
   - install_ueransim
   - smoke_test # add smoke test
@@ -39,7 +40,7 @@ deploy:
 
 kics_scan:
   image: ubuntu:22
-  stage: test
+  stage: kics_test
   allow_failure: true
   script:
     - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml
