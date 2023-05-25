@@ -1,21 +1,19 @@
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Terraform.gitlab-ci.yml
-
 variables:
   TF_ROOT: open5gs/infrastructure/eks
 
 include:
-  - template: Terraform/Base.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Terraform/Base.gitlab-ci.yml
-  - template: Jobs/SAST-IaC.gitlab-ci.yml   # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/SAST-IaC.gitlab-ci.yml
+  - template: Terraform/Base.gitlab-ci.yml  
+  - template: Jobs/SAST-IaC.gitlab-ci.yml   
 
 stages:
   - validate
   - test
   - build
   - deploy
-  - cleanup
+  - cleanup 
+  - install_open5gs
+  - install_ueransim
+  - smoke_test # add smoke test
 
 fmt:
   extends: .terraform:fmt
@@ -38,3 +36,34 @@ deploy:
   environment:
     name: $TF_STATE_NAME
     action: start
+
+kics_scan:
+  image: ubuntu:22
+  stage: test
+  allow_failure: true
+  script:
+    - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml
+    - curl -sfL 'https://raw.githubusercontent.com/Checkmarx/kics/master/install.sh' | bash
+    - kics scan -t Kubernetes open5gs.yaml | tee security-scan.txt
+  artifacts:
+    paths: 
+      - ./security-scan.txt
+      
+install_open5gs:
+  image: alpine/helm
+  stage: install_open5gs
+  environment: # Is this where we could specify the cluster that is created for Open5GS's deployment?
+    name: open5gs
+  script:
+    - helm repo add openverso https://gradiant.github.io/openverso-charts/
+    - helm install openverso/open5gs --values open5gs_values.yml
+  
+install_ueransim:
+  image: alpine/helm
+  stage: install_ueransim
+  script: 
+    - helm repo add openverso https://gradiant.github.io/openverso-charts/
+    - helm install ueransim-gnb openverso/ueransim-gnb --values openverso_ueransim_gnb_values.yml
+    - helm install ueransim-ues openverso/ueransim-ues --values openverso_ueransim_ues_values.yml
+
+# add smoke test that pings www.google.com
