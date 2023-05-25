@@ -64,7 +64,7 @@ install_ueransim:
   stage: install_ueransim
   script: 
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install ueransim-gnb openverso/ueransim-gnb --values openverso_ueransim_gnb_values.yml
-    - helm install ueransim-ues openverso/ueransim-ues --values openverso_ueransim_ues_values.yml
+    - helm install ueransim-gnb openverso/ueransim-gnb --values cntf/open5gs/application/openverso_ueransim_gnb_values.yml #added paths to created helm values files
+    - helm install ueransim-ues openverso/ueransim-ues --values cntf/open5gs/application/openverso_ueransim_ues_values.yml
 
 # add smoke test that pings www.google.com
