@@ -7,10 +7,10 @@ include:
 
 stages:
   - validate
-  - test
   - build
   - deploy
   - cleanup 
+  - test
   - install_open5gs
   - install_ueransim
   - smoke_test # add smoke test
