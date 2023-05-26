@@ -68,6 +68,7 @@ install_ueransim:
     - helm install ueransim-ues openverso/ueransim-ues --values cntf/open5gs/application/openverso_ueransim_ues_values.yml
 
 smoke_test: # added smoke test that pings www.google.com
+  image: ubuntu:22
   stage: smoke_test
   script:
     - sh cntf/open5gs/application/ueransim_smoke_test.sh
