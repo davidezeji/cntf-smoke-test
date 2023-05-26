@@ -67,4 +67,7 @@ install_ueransim:
     - helm install ueransim-gnb openverso/ueransim-gnb --values cntf/open5gs/application/openverso_ueransim_gnb_values.yml #added paths to created helm values files
     - helm install ueransim-ues openverso/ueransim-ues --values cntf/open5gs/application/openverso_ueransim_ues_values.yml
 
-# add smoke test that pings www.google.com
+smoke_test: # added smoke test that pings www.google.com
+  stage: smoke_test
+  script:
+    - sh cntf/open5gs/application/ueransim_smoke_test.sh
