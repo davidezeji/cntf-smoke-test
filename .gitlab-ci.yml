@@ -1,42 +1,8 @@
-variables:
-  TF_ROOT: open5gs/infrastructure/eks
-
-include:
-  - template: Terraform/Base.gitlab-ci.yml  
-  - template: Jobs/SAST-IaC.gitlab-ci.yml   
-
 stages:
-  - validate
-  - test
-  - build
-  - deploy
-  - cleanup 
   - kics_test
   - install_open5gs
   - install_ueransim
   - smoke_test # add smoke test
-
-fmt:
-  extends: .terraform:fmt
-  needs: []
-
-validate:
-  extends: .terraform:validate
-  needs: []
-
-build:
-  extends: .terraform:build
-  environment:
-    name: $TF_STATE_NAME
-    action: prepare
-
-deploy:
-  extends: .terraform:deploy
-  dependencies:
-    - build
-  environment:
-    name: $TF_STATE_NAME
-    action: start
 
 kics_scan:
   image: ubuntu:latest
@@ -53,8 +19,6 @@ kics_scan:
 install_open5gs:
   image: alpine/helm
   stage: install_open5gs
-  environment: # Is this where we could specify the cluster that is created for Open5GS's deployment?
-    name: open5gs
   script:
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
     - helm install openverso/open5gs --values open5gs_values.yml
