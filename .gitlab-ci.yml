@@ -25,15 +25,15 @@ install_open5gs:
   script:
     - apk add --no-cache bash
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install open5gs openverso/open5gs --values /cntf/open5gs/application/open5gs_values.yml
+    - helm install open5gs openverso/open5gs --values ./open5gs_values.yml
 
 install_ueransim:
   image: alpine/helm
   stage: install_ueransim
   script: 
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install ueransim-gnb openverso/ueransim-gnb --values cntf/open5gs/application/openverso_ueransim_gnb_values.yml #added paths to created helm values files
-    - helm install ueransim-ues openverso/ueransim-ues --values cntf/open5gs/application/openverso_ueransim_ues_values.yml
+    - helm install ueransim-gnb openverso/ueransim-gnb --values ./openverso_ueransim_gnb_values.yml #added paths to created helm values files
+    - helm install ueransim-ues openverso/ueransim-ues --values ./openverso_ueransim_ues_values.yml
 
 smoke_test: # added smoke test that pings www.google.com
   image: ubuntu:latest
