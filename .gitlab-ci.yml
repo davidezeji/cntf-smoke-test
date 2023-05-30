@@ -5,15 +5,17 @@ stages:
   - smoke_test # add smoke test
 
 kics_scan:
+  image: ubuntu:latest
   stage: kics_test
   allow_failure: true
   script:
-    - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml
+    - apt-get update && apt-get install -y curl
     - curl -sfL 'https://raw.githubusercontent.com/Checkmarx/kics/master/install.sh' | bash
+    - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml
     - kics scan -t Kubernetes open5gs.yaml | tee security-scan.txt
   artifacts:
     paths: 
-      - ./security-scan.txt
+      - security-scan.txt
       
 install_open5gs:
   image: alpine/helm
