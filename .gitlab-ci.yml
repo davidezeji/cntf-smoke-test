@@ -5,4 +5,4 @@ smoke_test: # added smoke test that pings www.google.com
   image: ubuntu:latest
   stage: smoke_test
   script:
-    - sh cntf/open5gs/application/ueransim_smoke_test.sh
+    - sh ./ueransim_smoke_test.sh
