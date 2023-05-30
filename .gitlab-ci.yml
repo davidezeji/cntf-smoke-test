@@ -5,8 +5,6 @@ stages:
   - smoke_test # add smoke test
 
 kics_scan:
-  tags: 
-    - gitlab-org
   stage: kics_test
   allow_failure: true
   script:
