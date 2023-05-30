@@ -57,7 +57,7 @@ install_open5gs:
     entrypoint: [""]
   stage: install_open5gs
   environment:
-    name: open5gs_cluster
+    name: open5gs_cluster #how do you define the url for the cluster without it being created yet?
     url: https://E1C5BA8C2B5FEFB3A1B4DBFE80E14B87.yl4.us-east-1.eks.amazonaws.com
   script:
     - apk add --no-cache bash
