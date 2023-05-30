@@ -22,8 +22,8 @@ install_open5gs:
   stage: install_open5gs
   script:
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install openverso/open5gs --values open5gs_values.yml
-  
+    - helm install open5gs openverso/open5gs --values cntf/open5gs/application/open5gs_values.yml
+
 install_ueransim:
   image: alpine/helm
   stage: install_ueransim
