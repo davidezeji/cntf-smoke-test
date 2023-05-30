@@ -5,7 +5,7 @@ stages:
   - smoke_test # add smoke test
 
 kics_scan:
-  image: ubuntu:latest
+  image: alpine/helm
   stage: kics_test
   allow_failure: true
   script:
