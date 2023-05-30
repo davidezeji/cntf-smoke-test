@@ -39,7 +39,6 @@ deploy:
     action: start
 
 kics_scan:
-  image: ubuntu:22
   stage: kics_test
   allow_failure: true
   script:
