@@ -5,7 +5,8 @@ stages:
   - smoke_test # add smoke test
 
 kics_scan:
-  image: alpine/helm
+  tags: 
+    - gitlab-org
   stage: kics_test
   allow_failure: true
   script:
