@@ -1,8 +1,12 @@
 stages:
   - smoke_test # add smoke test
 
-smoke_test: # added smoke test that pings www.google.com
+smoke_test:
   image: ubuntu:latest
   stage: smoke_test
   script:
-    - sh ./ueransim_smoke_test.sh
+    - apt-get update && apt-get install -y curl
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - chmod +x kubectl
+    - mv kubectl /usr/local/bin/
+    - sh /open5gs/application/ueransim_smoke_test.sh
