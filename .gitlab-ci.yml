@@ -1,42 +1,5 @@
 stages:
-  - kics_test
-  - install_open5gs
-  - install_ueransim
   - smoke_test # add smoke test
-
-kics_scan:
-  image: ubuntu:latest
-  stage: kics_test
-  allow_failure: true
-  script:
-    - apt-get update && apt-get install -y curl
-    - curl -sfL 'https://raw.githubusercontent.com/Checkmarx/kics/master/install.sh' | bash
-    - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml
-    - kics scan -t Kubernetes open5gs.yaml | tee security-scan.txt
-  artifacts:
-    paths: 
-      - security-scan.txt
-      
-install_open5gs:
-  image:
-    name: alpine/helm
-    entrypoint: [""]
-  stage: install_open5gs
-  environment:
-    name: open5gs_cluster
-    url: https://E1C5BA8C2B5FEFB3A1B4DBFE80E14B87.yl4.us-east-1.eks.amazonaws.com
-  script:
-    - apk add --no-cache bash
-    - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install open5gs openverso/open5gs --values ./open5gs_values.yml
-
-install_ueransim:
-  image: alpine/helm
-  stage: install_ueransim
-  script: 
-    - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install ueransim-gnb openverso/ueransim-gnb --values ./openverso_ueransim_gnb_values.yml #added paths to created helm values files
-    - helm install ueransim-ues openverso/ueransim-ues --values ./openverso_ueransim_ues_values.yml
 
 smoke_test: # added smoke test that pings www.google.com
   image: ubuntu:latest
