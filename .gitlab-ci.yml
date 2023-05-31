@@ -67,8 +67,8 @@ install_open5gs:
     entrypoint: [""]
   stage: install_open5gs
   variables:
-    - REGION: us-east-1
-    - CLUSTER_NAME: cntf-open5gs-cluster
+    REGION: us-east-1
+    CLUSTER_NAME: cntf-open5gs-cluster
   environment:
     name: open5gs_cluster 
   script:
