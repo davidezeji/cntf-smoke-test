@@ -1,7 +1,7 @@
 variables:
   TF_ROOT: open5gs/infrastructure/eks
   TF_STATE_NAME: open5gs
-  
+
 include:
   - template: Terraform/Base.gitlab-ci.yml  
   - template: Jobs/SAST-IaC.gitlab-ci.yml   
@@ -84,8 +84,8 @@ install_ueransim:
   image: alpine/helm
   stage: install_ueransim
   variables:
-    - REGION: us-east-1
-    - CLUSTER_NAME: cntf-open5gs-cluster
+    REGION: us-east-1
+    CLUSTER_NAME: cntf-open5gs-cluster
   environment:
     name: open5gs_cluster 
   script: 
