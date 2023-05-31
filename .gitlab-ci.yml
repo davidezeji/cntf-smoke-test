@@ -1,3 +1,8 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+    - when: never
+
 variables:
   TF_ROOT: open5gs/infrastructure/eks
   TF_STATE_NAME: open5gs
@@ -20,16 +25,28 @@ stages:
 fmt:
   extends: .terraform:fmt
   needs: []
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
 
 validate:
   extends: .terraform:validate
   needs: []
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
 
 build:
   extends: .terraform:build
   environment:
     name: $TF_STATE_NAME
     action: prepare
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
 
 deploy:
   extends: .terraform:deploy
@@ -38,6 +55,10 @@ deploy:
   environment:
     name: $TF_STATE_NAME
     action: start
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
 
 cleanup:
   extends: .terraform:destroy
