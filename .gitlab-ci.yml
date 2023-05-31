@@ -75,7 +75,7 @@ install_open5gs:
     - apk add --no-cache bash
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     - unzip awscliv2.zip
-    - sudo ./aws/install
+    - ./aws/install
     - aws eks update-kubectl --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
     - helm install open5gs openverso/open5gs --values ./open5gs_values.yml
@@ -91,7 +91,7 @@ install_ueransim:
   script: 
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     - unzip awscliv2.zip
-    - sudo ./aws/install
+    - ./aws/install
     - aws eks update-kubectl --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
     - helm install ueransim-gnb openverso/ueransim-gnb --values ./openverso_ueransim_gnb_values.yml #added paths to created helm values files
