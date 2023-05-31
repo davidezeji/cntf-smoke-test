@@ -89,9 +89,9 @@ install_ueransim:
   environment:
     name: open5gs_cluster 
   script: 
-    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    - unzip awscliv2.zip
-    - ./aws/install
+     - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
     - aws --version
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
