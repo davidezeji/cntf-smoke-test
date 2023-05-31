@@ -38,6 +38,23 @@ deploy:
     name: $TF_STATE_NAME
     action: start
 
+destroy:
+  extends: .terraform:destroy
+  dependencies: 
+    - destroy
+  environment:
+    name: $TF_STATE_NAME
+    action: 
+
+cleanup:
+  extends: .terraform:destroy
+  dependencies:
+    - deploy
+  environment:
+    name: $TF_STATE_NAME
+    action: stop
+  when: manual
+
 kics_scan:
   image: ubuntu:latest
   stage: kics_test
