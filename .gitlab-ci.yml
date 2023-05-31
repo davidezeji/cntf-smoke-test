@@ -67,6 +67,9 @@ install_open5gs:
 install_ueransim:
   image: alpine/helm
   stage: install_ueransim
+  environment:
+    name: open5gs_cluster #how do you define the url for the cluster without it being created yet?
+    url: https://E1C5BA8C2B5FEFB3A1B4DBFE80E14B87.yl4.us-east-1.eks.amazonaws.com
   script: 
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
     - helm install ueransim-gnb openverso/ueransim-gnb --values ./openverso_ueransim_gnb_values.yml #added paths to created helm values files
@@ -75,6 +78,9 @@ install_ueransim:
 smoke_test:
   image: ubuntu:latest
   stage: smoke_test
+  environment:
+    name: open5gs_cluster #how do you define the url for the cluster without it being created yet?
+    url: https://E1C5BA8C2B5FEFB3A1B4DBFE80E14B87.yl4.us-east-1.eks.amazonaws.com
   script:
     - apt-get update && apt-get install -y curl
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
