@@ -38,14 +38,6 @@ deploy:
     name: $TF_STATE_NAME
     action: start
 
-destroy:
-  extends: .terraform:destroy
-  dependencies: 
-    - destroy
-  environment:
-    name: $TF_STATE_NAME
-    action: 
-
 cleanup:
   extends: .terraform:destroy
   dependencies:
