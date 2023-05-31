@@ -159,3 +159,42 @@ resource "aws_iam_role_policy_attachment" "caws-ebs-csi-driver" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
 
+## Install Fluentd Helm Chart
+locals {
+  name = "fluentd-http"
+
+  labels = {
+    k8s-app = "fluentd-http"
+    version = "v1"
+  }
+}
+
+resource "kubernetes_secret" "coralogix-keys" {
+  metadata {
+    name      = "coralogix-keys"
+    namespace = "monitoring"
+  }
+
+  data = {
+    PRIVATE_KEY = var.coralogix_write_key
+  }
+}
+
+resource "helm_release" "fluentd_daemonset" {
+  repository = "https://cgx.jfrog.io/artifactory/coralogix-charts-virtual"
+  chart      = "fluentd-http"
+  version    = "0.0.10"
+
+  name            = "fluentd"
+  namespace       = "monitoring"
+  cleanup_on_fail = true
+
+  values = [
+    file("${path.module}/fluentd-override.yaml")
+  ]
+
+  depends_on = [
+    kubernetes_secret.coralogix-keys
+  ]
+}
+
