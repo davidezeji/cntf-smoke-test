@@ -1,7 +1,7 @@
-workflow:
-  rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-    - when: never
+# workflow:
+#   rules:
+#     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+#     - when: never
 
 variables:
   TF_ROOT: open5gs/infrastructure/eks
@@ -25,18 +25,18 @@ stages:
 fmt:
   extends: .terraform:fmt
   needs: []
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 validate:
   extends: .terraform:validate
   needs: []
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 build:
   extends: .terraform:build
