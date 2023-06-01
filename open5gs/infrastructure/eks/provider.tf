@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
-}
-
 provider "aws" {
   region = var.aws_region
 }
@@ -29,7 +20,7 @@ provider "kubernetes" {
 
 provider "kubectl" {
   load_config_file       = false
-  host                   = module.eksa.eks_cluster_endpoint
+  host                   = module.eks.eks_cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.eks_cluster_certificate_authority_data)
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
@@ -40,7 +31,7 @@ provider "kubectl" {
 
 provider "helm" {
   kubernetes {
-    host                   = module.cvp_infra.eks_cluster_endpoint
+    host                   = module.eks.eks_cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.eks_cluster_certificate_authority_data)
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"
