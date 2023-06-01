@@ -112,3 +112,10 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "coralogix_write_key" {
+  sensitive   = true
+  type        = string
+  description = "the secret write keyto ship logs to coralogix via fluentd"
+  default     = ""
+}
