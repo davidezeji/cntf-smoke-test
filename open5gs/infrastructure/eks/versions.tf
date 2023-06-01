@@ -36,10 +36,7 @@ terraform {
     }
   }
 
-  backend "s3" {
-    encrypt = true
-    bucket  = "verica-tfstate-dish"
-    key     = "dish-sandbox/infrastructure"
+    backend "http" {
   }
 
   required_version = ">= 0.14"
