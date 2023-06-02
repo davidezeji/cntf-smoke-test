@@ -58,10 +58,10 @@ build:
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 deploy:
   extends: .terraform:deploy
@@ -75,10 +75,10 @@ deploy:
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 cleanup:
   extends: .terraform:destroy
@@ -143,7 +143,9 @@ install_open5gs:
     - helm install open5gs openverso/open5gs --values ./open5gs_values.yml
 
 install_ueransim:
-  image: alpine/helm
+  image:
+    name: alpine/helm
+    entrypoint: [""]
   stage: install_ueransim
   variables:
     REGION: us-east-1
