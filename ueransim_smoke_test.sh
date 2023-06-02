@@ -1,10 +1,9 @@
 #!/bin/bash
 
-kubectl -n openverso exec -ti deployment/ueransim-gnb-ues -- /bin/bash
 echo ip addr
-ping -I uesimtun6 google.com
-traceroute -i uesimtun6 google.com
-curl --interface uesimtun6 https://www.google.com
+ping -I uesimtun0 google.com
+traceroute -i uesimtun0 google.com
+curl --interface uesimtun0 https://www.google.com
 
 if  [ $? -eq 0 ]
 then

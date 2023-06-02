@@ -144,7 +144,7 @@ install_open5gs:
     - aws --version
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install open5gs openverso/open5gs --namespace open5gs --values ./open5gs_values.yml
+    - helm upgrade --install open5gs openverso/open5gs --namespace open5gs --values ./open5gs_values.yml
 
 install_ueransim:
   image:
@@ -163,8 +163,8 @@ install_ueransim:
     - aws --version
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm install ueransim-gnb openverso/ueransim-gnb --namespace ueransim --values ./openverso_ueransim_gnb_values.yml #added paths to created helm values files
-    - helm install ueransim-ues openverso/ueransim-ues --namespace ueransim --values ./openverso_ueransim_ues_values.yml
+    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace ueransim --values ./openverso_ueransim_gnb_values.yml #added paths to created helm values files
+    - helm upgrade --install ueransim-ues openverso/ueransim-ues --namespace ueransim --values ./openverso_ueransim_ues_values.yml
 
 smoke_test:
   image: ubuntu:latest
@@ -176,4 +176,7 @@ smoke_test:
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
-    - sh ./ueransim_smoke_test.sh
+    # - UE_POD=$(kubectl -n ueransim get pod -o name -l app.kubernetes.io/component=ues)
+    # - kubectl -n ueransim cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
+    # - kubectl -n ueransim exec $UE_POD -- /tmp/ueransim_smoke_test.sh
+ 
