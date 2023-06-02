@@ -97,7 +97,9 @@ cleanup:
   when: manual
 
 kics_scan:
-  image: checkmarx/kics
+  image: 
+    name: checkmarx/kics
+    entrypoint: [""]
   stage: kics_test
   allow_failure: true
   script:
