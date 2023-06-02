@@ -24,6 +24,11 @@ stages:
 
 fmt:
   extends: .terraform:fmt
+  before_script:
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
   needs: []
   # rules:
   #   - changes:
@@ -32,6 +37,11 @@ fmt:
 
 validate:
   extends: .terraform:validate
+  before_script:
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
   needs: []
   # rules:
   #   - changes:
@@ -43,6 +53,11 @@ build:
   environment:
     name: $TF_STATE_NAME
     action: prepare
+  before_script:
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
   rules:
     - changes:
         paths:
@@ -55,6 +70,11 @@ deploy:
   environment:
     name: $TF_STATE_NAME
     action: start
+  before_script:
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
   rules:
     - changes:
         paths:
@@ -67,6 +87,11 @@ cleanup:
   environment:
     name: $TF_STATE_NAME
     action: stop
+  before_script:
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
   when: manual
 
 kics_scan:
