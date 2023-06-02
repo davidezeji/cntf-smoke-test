@@ -209,3 +209,20 @@ resource "helm_release" "fluentd_daemonset" {
   ]
 }
 
+resource "kubernetes_namespace" "monitoring" {
+  metadata {
+    name = "monitoring"
+  }
+}
+
+resource "kubernetes_namespace" "open5gs" {
+  metadata {
+    name = "open5gs"
+  }
+}
+
+resource "kubernetes_namespace" "ueransim" {
+  metadata {
+    name = "ueransim"
+  }
+}
