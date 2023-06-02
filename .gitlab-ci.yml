@@ -58,6 +58,8 @@ build:
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
+  after_script:
+    - curl -X DELETE --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" https://gitlab.com/api/v4/projects/46235177/terraform/state/open5gs/lock
   # rules:
   #   - changes:
   #       paths:
@@ -95,7 +97,9 @@ cleanup:
   when: manual
 
 kics_scan:
-  image: checkmarx/kics
+  image: 
+    name: checkmarx/kics
+    entrypoint: [""]
   stage: kics_test
   allow_failure: true
   script:
