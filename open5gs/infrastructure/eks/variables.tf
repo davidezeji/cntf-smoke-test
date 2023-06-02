@@ -33,7 +33,7 @@ variable "desired_size" {
 
 variable "min_size" {
   type    = string
-  default = "1"
+  default = "4"
 }
 
 variable "max_size" {
