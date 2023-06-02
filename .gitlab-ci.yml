@@ -78,10 +78,10 @@ deploy:
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 cleanup:
   extends: .terraform:destroy
