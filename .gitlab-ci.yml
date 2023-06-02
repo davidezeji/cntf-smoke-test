@@ -17,7 +17,7 @@ stages:
   - build
   - deploy
   - cleanup 
-  - kics_test
+  # - kics_test
   - install_open5gs
   - install_ueransim
   - smoke_test 
@@ -101,7 +101,7 @@ kics_scan:
   image: 
     name: checkmarx/kics
     entrypoint: [""]
-  stage: kics_test
+  stage: test
   allow_failure: true
   script:
     - apk update
