@@ -119,3 +119,7 @@ variable "coralogix_write_key" {
   description = "the secret write keyto ship logs to coralogix via fluentd"
   default     = ""
 }
+
+variable "bucket_name" {
+  default     = "cntf-open5gs"
+}

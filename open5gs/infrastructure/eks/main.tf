@@ -226,3 +226,8 @@ resource "kubernetes_namespace" "ueransim" {
     name = "ueransim"
   }
 }
+
+resource "aws_s3_bucket" "cntf_open5gs_bucket" {
+  bucket = var.bucket_name
+}
+
