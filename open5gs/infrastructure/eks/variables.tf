@@ -121,5 +121,5 @@ variable "coralogix_write_key" {
 }
 
 variable "bucket_name" {
-  default     = "cntf-open5gs-coralogix-logs"
+  default = "cntf-open5gs-coralogix-logs"
 }

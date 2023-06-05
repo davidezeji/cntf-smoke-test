@@ -9,7 +9,7 @@ module "eks" {
       groups   = ["system:masters"]
     }
   ]
-  
+
   source  = "terraform-aws-modules/eks/aws"
   version = "18.20.5"
 
