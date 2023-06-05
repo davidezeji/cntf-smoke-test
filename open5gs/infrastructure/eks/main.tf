@@ -81,9 +81,9 @@ module "eks" {
 
   eks_managed_node_groups = {
     default_node_group = {
-      min_size     = 1
-      max_size     = 4
-      desired_size = 3
+      min_size     = var.min_size
+      max_size     = var.max_size
+      desired_size = var.desired_size
 
       instance_types = [var.node_instance_type]
       subnet_ids     = var.private_subnets
