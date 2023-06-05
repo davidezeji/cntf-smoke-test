@@ -30,10 +30,10 @@ fmt:
     - pip3 install --no-cache-dir awscli
     - aws --version
   needs: []
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 validate:
   extends: .terraform:validate
@@ -43,10 +43,10 @@ validate:
     - pip3 install --no-cache-dir awscli
     - aws --version
   needs: []
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 build:
   extends: .terraform:build
@@ -61,10 +61,10 @@ build:
   after_script:
     - >
      curl -X DELETE --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" https://gitlab.com/api/v4/projects/46235177/terraform/state/open5gs/lock
-  # rules:
-  #   - changes:
-  #       paths:
-  #         - open5gs/infrastructure/eks/*.tf
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
  
 deploy:
   extends: .terraform:deploy
@@ -78,10 +78,10 @@ deploy:
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
-  # rules:
-  #   - changes:
-  #       paths:
-  #         - open5gs/infrastructure/eks/*.tf
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
 
 cleanup:
   extends: .terraform:destroy

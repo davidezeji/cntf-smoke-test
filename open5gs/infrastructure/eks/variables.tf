@@ -28,7 +28,7 @@ variable "private_subnets" {
 
 variable "desired_size" {
   type    = string
-  default = "4"
+  default = "5"
 }
 
 variable "min_size" {
@@ -38,7 +38,7 @@ variable "min_size" {
 
 variable "max_size" {
   type    = string
-  default = "5"
+  default = "6"
 }
 
 variable "image_id" {
