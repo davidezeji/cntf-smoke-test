@@ -60,10 +60,10 @@ build:
     - aws --version
   after_script:
     - gitlab-terraform state show module.eks.eks_managed_node_groups
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
  
 deploy: # pipeline currently doesn't scale according to current terraform configurations
   extends: .terraform:deploy
@@ -77,10 +77,10 @@ deploy: # pipeline currently doesn't scale according to current terraform config
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - open5gs/infrastructure/eks/*.tf
 
 cleanup:
   extends: .terraform:destroy
