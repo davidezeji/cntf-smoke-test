@@ -59,7 +59,8 @@ build:
     - pip3 install --no-cache-dir awscli
     - aws --version
   after_script:
-    - gitlab-terraform state list 
+    - gitlab-terraform state show module.eks.module.eks_managed_node_group["default_node_group"].aws_eks_node_group.this[0]
+    - gitlab-terraform state show module.eks.module.eks_managed_node_group["default_node_group"].aws_launch_template.this[0]
   #   - changes:
   #       paths:
   #         - open5gs/infrastructure/eks/*.tf
