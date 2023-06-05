@@ -36,7 +36,10 @@ terraform {
     }
   }
 
-  backend "http" {
+  backend "s3" {
+    encrypt = true
+    bucket  = "cntf-tfstate-dish"
+    key     = "infrastructure"
   }
 
   required_version = ">= 0.14"
