@@ -112,7 +112,7 @@ kics_scan:
     - mv linux-amd64/helm /usr/local/bin/
     - helm version
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml
+    - helm template open5gs openverso/open5gs --values open5gs_values.yml > ./open5gs.yaml
     - which open5gs.yaml
     - kics scan -t Kubernetes open5gs.yaml | tee security-scan.txt
   artifacts:
