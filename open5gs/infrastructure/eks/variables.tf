@@ -53,7 +53,7 @@ variable "instance_type" {
 
 variable "kubernetes_version" {
   type        = string
-  default     = "1.23"
+  default     = "1.24"
   description = "Desired Kubernetes master version. If you do not specify a value, the latest available version is used"
 }
 
