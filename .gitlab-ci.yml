@@ -66,7 +66,7 @@ build:
         paths:
           - open5gs/infrastructure/eks/*.tf
  
-deploy:
+deploy: # pipeline currently doesn't scale according to current terraform configurations
   extends: .terraform:deploy
   dependencies:
     - build
@@ -111,9 +111,9 @@ kics_scan:
     - tar -zxvf helm-v3.7.0-linux-amd64.tar.gz
     - mv linux-amd64/helm /usr/local/bin/
     - helm version
-    - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm template open5gs openverso/open5gs --values open5gs_values.yml > ./open5gs.yaml
-    - which open5gs.yaml
+    - helm repo add openverso https://gradiant.github.io/openverso-charts/ # pretty sure this step is unneeded but thought it may help execute the next command below?
+    - helm template open5gs openverso/open5gs --values open5gs_values.yml > ./open5gs.yaml # defined path for open5gs.yaml, because pipeline fails to execute this command
+    - which open5gs.yaml # created this file manually since the step above wouldn't create it
     - kics scan -t Kubernetes open5gs.yaml | tee security-scan.txt
   artifacts:
     paths: 
