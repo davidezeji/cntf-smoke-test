@@ -30,8 +30,8 @@ module "eks" {
 
   enable_irsa = var.enable_irsa
 
-  subnet_ids = var.private_subnets
-  vpc_id     = var.vpc_id
+  # subnet_ids = var.private_subnets
+  # vpc_id     = var.vpc_id
 
   # eks_managed_node_group_defaults = {
   #   pre_bootstrap_user_data = local.ssm_userdata
@@ -86,8 +86,8 @@ module "eks" {
       desired_size = 5
 
       instance_types = [var.node_instance_type]
-      subnet_ids     = var.private_subnets
-      vpc_id         = var.vpc_id
+      # subnet_ids     = var.private_subnets
+      # vpc_id         = var.vpc_id
     }
   }
 }
