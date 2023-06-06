@@ -17,8 +17,7 @@ stages:
   - build
   - deploy
   - cleanup 
-  - install_open5gs
-  - install_ueransim
+  - install_helm
   - smoke_test 
 
 fmt:
@@ -133,7 +132,7 @@ install_open5gs:
   image:
     name: alpine/helm
     entrypoint: [""]
-  stage: install_open5gs
+  stage: install_helm
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
@@ -152,7 +151,7 @@ install_ueransim:
   image:
     name: alpine/helm
     entrypoint: [""]
-  stage: install_ueransim
+  stage: install_helm
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
@@ -171,6 +170,9 @@ install_ueransim:
 ue_populate:
   stage: smoke_test
   image: ubuntu:latest
+  variables:
+    REGION: us-east-1
+    CLUSTER_NAME: cntf-open5gs-cluster
   environment: 
     name: open5gs_cluster
   script:
@@ -188,6 +190,9 @@ ue_populate:
 
 smoke_test:
   image: ubuntu:latest
+  variables:
+    REGION: us-east-1
+    CLUSTER_NAME: cntf-open5gs-cluster
   needs: 
     - ue_populate
   stage: smoke_test
@@ -201,6 +206,7 @@ smoke_test:
     - ./aws/install
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
+    - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
     - UE_POD=$(kubectl -n ueransim get pod -o name -l app.kubernetes.io/component=ues)
     - kubectl -n ueransim cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n ueransim exec $UE_POD -- /tmp/ueransim_smoke_test.sh
