@@ -40,6 +40,7 @@ terraform {
     encrypt = true
     bucket  = "cntf-tfstate-dish"
     key     = "infrastructure"
+    region  = "us-east-1"
   }
 
   required_version = ">= 0.14"
