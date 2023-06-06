@@ -21,6 +21,12 @@ stages:
   - install_ueransim
   - smoke_test 
 
+init-reconfigure:
+  stage: validate
+  extends: .terraform:fmt
+  script:
+  - gitlab-terraform init -reconfigure
+
 fmt:
   extends: .terraform:fmt
   before_script:
