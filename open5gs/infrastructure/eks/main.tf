@@ -30,8 +30,8 @@ module "eks" {
 
   enable_irsa = var.enable_irsa
 
-  # subnet_ids = var.private_subnets
-  # vpc_id     = var.vpc_id
+  subnet_ids = var.private_subnets
+  vpc_id     = var.vpc_id
 
   # eks_managed_node_group_defaults = {
   #   pre_bootstrap_user_data = local.ssm_userdata
@@ -86,8 +86,8 @@ module "eks" {
       desired_size = 5
 
       instance_types = [var.node_instance_type]
-      # subnet_ids     = var.private_subnets
-      # vpc_id         = var.vpc_id
+      subnet_ids     = var.private_subnets
+      vpc_id         = var.vpc_id
     }
   }
 }
@@ -231,37 +231,5 @@ resource "aws_s3_bucket" "cntf_open5gs_bucket" {
   bucket = var.bucket_name
 }
 
-data "aws_availability_zones" "available" {
 
-}
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "3.14.0"
-
-  name = "${var.cluster_name}-vpc"
-
-  cidr            = "10.0.0.0/16"
-  azs             = data.aws_availability_zones.available.names
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-
-  enable_nat_gateway = true
-  single_nat_gateway = true
-
-  enable_dns_hostnames = true
-
-  tags = {
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-  }
-
-  public_subnet_tags = {
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                    = "1"
-  }
-
-  private_subnet_tags = {
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"           = "1"
-  }
-}

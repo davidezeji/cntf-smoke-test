@@ -8,19 +8,19 @@ variable "cluster_name" {
   default = "cntf-open5gs-cluster"
 }
 
-# variable "vpc_id" {
-#   type    = string
-#   default = "vpc-0e97acae1f3e98180"
-# }
+variable "vpc_id" {
+  type    = string
+  default = "vpc-05a8ec54222fa40e2"
+}
 # variable "vpc_id" {
 #   type    = string
 #   default = "vpc-079d1a939306e311f"
 # }
 
-# variable "private_subnets" {
-#   type    = list(any)
-#   default = ["subnet-01ca90ff571a722b5", "subnet-05bf6978b0e395268"]
-# }
+variable "private_subnets" {
+  type    = list(any)
+  default = ["subnet-009976b4a3c08ec9f", "subnet-0da7894199f5c3731"]
+}
 # variable "private_subnets" {
 #   type    = list(any)
 #   default = ["subnet-0ebdfa23a1ac3f9a6", "subnet-09d5db76f3f1e66d5"]
