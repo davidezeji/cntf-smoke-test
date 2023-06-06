@@ -32,3 +32,25 @@ output "oidc_provider_arn" {
   description = "The ARN of the OIDC Provider if `enable_irsa = true`"
   value       = module.eks.oidc_provider_arn
 }
+
+output "vpc" {
+  value = module.vpc
+}
+
+output "private_subnets" {
+  value = module.vpc.private_subnets
+}
+
+output "public_subnets_cidr_block" {
+  description = "IDs of the VPC's public subnet cidr block"
+  value       = module.vpc.public_subnets_cidr_blocks[0]
+}
+
+output "private_subnets_cidr_block" {
+  description = "IDs of the VPC's private subnet cidr block"
+  value       = module.vpc.private_subnets_cidr_blocks[0]
+}
+
+output "nat_gateway_id" {
+  value = module.vpc.natgw_ids[0]
+}
