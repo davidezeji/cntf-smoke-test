@@ -206,7 +206,8 @@ smoke_test:
     - ./aws/install
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
-    - UE_POD=$(kubectl -n ueransim get pod -o name -l app.kubernetes.io/component=ues)
+    - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
+    - UE_POD=$(kubectl -n ueransim get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=ues)
     - kubectl -n ueransim cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n ueransim exec $UE_POD -- /tmp/ueransim_smoke_test.sh
     
