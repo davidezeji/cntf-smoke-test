@@ -184,9 +184,9 @@ ue_populate:
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
-    - POPULATE_POD=$(kubectl -n open5gs get pod -o name -l app.kubernetes.io/component=populate)
+    - POPULATE_POD=$(kubectl -n open5gs get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl -n open5gs cp ./ue_populate.sh $POPULATE_POD:/tmp/ue_populate.sh
-    - kubectl -n ueransim exec $POPULATE_POD -- /tmp/ue_populate.sh
+    - kubectl -n open5gs exec $POPULATE_POD -- /tmp/ue_populate.sh
 
 smoke_test:
   image: ubuntu:latest
@@ -206,7 +206,6 @@ smoke_test:
     - ./aws/install
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
-    - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
     - UE_POD=$(kubectl -n ueransim get pod -o name -l app.kubernetes.io/component=ues)
     - kubectl -n ueransim cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n ueransim exec $UE_POD -- /tmp/ueransim_smoke_test.sh
