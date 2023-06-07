@@ -227,9 +227,12 @@ resource "kubernetes_namespace" "ueransim" {
   }
 }
 
-resource "aws_s3_bucket" "cntf_open5gs_bucket" {
-  bucket = var.bucket_name
+resource "aws_s3_bucket" "cntf_open5gs_bucket_logs" {
+  bucket = var.bucket_name_one
 }
 
+resource "aws_s3_bucket" "cntf_open5gs_bucket_metrics" {
+  bucket = var.bucket_name_two
+}
 
 
