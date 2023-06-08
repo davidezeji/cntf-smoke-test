@@ -164,8 +164,8 @@ install_ueransim:
     - aws --version
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace ueransim --values https://github.com/DISHDevEx/napp/blob/main/napp/open5gs_values/gnb_ues_values.yaml 
-    - helm upgrade --install ueransim-ues openverso/ueransim-ues --namespace ueransim --values ./openverso_ueransim_ues_values.yml
+    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace open5gs --values ./openverso_ueransim_gnb_values.yml 
+    # - helm upgrade --install ueransim-ues openverso/ueransim-ues --namespace open5gs --values ./openverso_ueransim_ues_values.yml
 
 ue_populate:
   allow_failure: true
