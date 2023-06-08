@@ -145,8 +145,9 @@ install_open5gs:
     - pip3 install --no-cache-dir awscli
     - aws --version
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
+    - kubectl apply -f openverso_namespace.yaml
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm upgrade --install open5gs openverso/open5gs --namespace open5gs --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/5gSA_ues_values.yaml
+    - helm upgrade --install open5gs openverso/open5gs --namespace openverso --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/5gSA_ues_values.yaml
 
 install_ueransim:
   image:
@@ -165,7 +166,7 @@ install_ueransim:
     - aws --version
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace open5gs --values ./openverso_ueransim_gnb_values.yml 
+    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace openverso --values https://github.com/DISHDevEx/napp/blob/main/napp/open5gs_values/gnb_ues_values.yaml
     # - helm upgrade --install ueransim-ues openverso/ueransim-ues --namespace open5gs --values ./openverso_ueransim_ues_values.yml
 
 ue_populate:

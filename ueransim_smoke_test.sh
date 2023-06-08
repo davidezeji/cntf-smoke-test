@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo ip addr
-ping -I uesimtun0 google.com
-traceroute -i uesimtun0 google.com
+ping -I uesimtun0 -c 1 google.com 
+# traceroute -i uesimtun0 google.com
 curl --interface uesimtun0 https://www.google.com
 
 if  [ $? -eq 0 ]
