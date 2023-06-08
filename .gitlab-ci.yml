@@ -58,9 +58,9 @@ build:
     - pip3 install --no-cache-dir awscli
     - aws --version
   rules:
-    changes:
-      paths:
-        - open5gs/infrastructure/eks/*.tf
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
  
 deploy: # pipeline currently doesn't scale according to current terraform configurations
   extends: .terraform:deploy
