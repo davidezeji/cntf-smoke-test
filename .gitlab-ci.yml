@@ -41,10 +41,10 @@ validate:
     - pip3 install --no-cache-dir awscli
     - aws --version
   needs: []
-  # rules:
-  #   - changes:
-  #       paths:
-  #         - open5gs/infrastructure/eks/*.tf
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
 
 build:
   extends: .terraform:build
@@ -57,9 +57,10 @@ build:
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
-  #   - changes:
-  #       paths:
-  #         - open5gs/infrastructure/eks/*.tf
+  rules:
+    changes:
+      paths:
+        - open5gs/infrastructure/eks/*.tf
  
 deploy: # pipeline currently doesn't scale according to current terraform configurations
   extends: .terraform:deploy
@@ -74,10 +75,10 @@ deploy: # pipeline currently doesn't scale according to current terraform config
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
     - aws --version
-  # rules:
-  #   - changes:
-  #       paths:
-  #         - open5gs/infrastructure/eks/*.tf
+  rules:
+    - changes:
+        paths:
+          - open5gs/infrastructure/eks/*.tf
 
 cleanup:
   extends: .terraform:destroy
@@ -208,7 +209,7 @@ smoke_test:
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
-    - UE_POD=$(kubectl -n ueransim get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=ues)
-    - kubectl -n ueransim cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
-    - kubectl -n ueransim exec $UE_POD -- /tmp/ueransim_smoke_test.sh
+    - UE_POD=$(kubectl -n open5gs get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=ues)
+    - kubectl -n open5gs cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
+    - kubectl -n open5gs exec $UE_POD -- /tmp/ueransim_smoke_test.sh
     
