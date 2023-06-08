@@ -172,7 +172,7 @@ install_ueransim:
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace openverso --values https://github.com/DISHDevEx/napp/blob/main/napp/open5gs_values/gnb_ues_values.yaml
+    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace openverso --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
     # - helm upgrade --install ueransim-ues openverso/ueransim-ues --namespace open5gs --values ./openverso_ueransim_ues_values.yml
 
 ue_populate:
