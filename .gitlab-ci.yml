@@ -1,9 +1,10 @@
 #Job that populates a random IMSI ID into the database
 
-- subscribe
-- deploy
-- test
-- cleanup
+stages:
+  - subscribe
+  - deploy
+  - test
+  - cleanup
 
 
 ue_populate_random:
