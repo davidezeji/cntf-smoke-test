@@ -29,8 +29,6 @@ fmt:
     - aws --version
   needs: []
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
     - changes:
         paths:
           - open5gs/infrastructure/eks/*.tf
@@ -44,8 +42,6 @@ validate:
     - aws --version
   needs: []
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
     - changes:
         paths:
           - open5gs/infrastructure/eks/*.tf
@@ -62,8 +58,6 @@ build:
     - pip3 install --no-cache-dir awscli
     - aws --version
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
     - changes:
         paths:
           - open5gs/infrastructure/eks/*.tf
@@ -82,8 +76,6 @@ deploy: # pipeline currently doesn't scale according to current terraform config
     - pip3 install --no-cache-dir awscli
     - aws --version
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
     - changes:
         paths:
           - open5gs/infrastructure/eks/*.tf
@@ -124,21 +116,6 @@ kics_scan:
     paths: 
       - security-scan.txt
       - open5gs.yaml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-# kics_scan:
-#   image: ubuntu:latest
-#   stage: kics_test
-#   allow_failure: true
-#   script:
-#     - apt-get update && apt-get install -y curl
-#     - curl -sfL 'https://raw.githubusercontent.com/Checkmarx/kics/master/install.sh' | bash
-#     - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml
-#     - kics scan -t Kubernetes open5gs.yaml | tee security-scan.txt
-#   artifacts:
-#     paths: 
-#       - security-scan.txt
       
 install_open5gs:
   image:
@@ -162,9 +139,6 @@ install_open5gs:
     - kubectl apply -f openverso_namespace.yaml
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
     - helm upgrade --install open5gs openverso/open5gs --namespace openverso --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/5gSA_ues_values.yaml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
 
 install_ueransim:
   image:
@@ -187,9 +161,6 @@ install_ueransim:
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
     - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace openverso --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
 
 ue_populate:
   allow_failure: true
@@ -212,9 +183,6 @@ ue_populate:
     - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl -n openverso cp ./ue_populate.sh $POPULATE_POD:/tmp/ue_populate.sh
     - kubectl -n openverso exec $POPULATE_POD -- /tmp/ue_populate.sh
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
 
 smoke_test:
   image: ubuntu:latest
@@ -238,7 +206,6 @@ smoke_test:
     - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=ues)
     - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n openverso exec $UE_POD -- /tmp/ueransim_smoke_test.sh
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
+ 
     
     
