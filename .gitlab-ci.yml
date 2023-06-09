@@ -1,150 +1,59 @@
-# workflow:
-#   rules:
-#     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-#     - when: never
+#Job that populates a random IMSI ID into the database
 
-variables:
-  TF_ROOT: open5gs/infrastructure/eks
-  TF_STATE_NAME: open5gs
+- subscribe
+- deploy
+- test
+- cleanup
 
-include:
-  - template: Terraform/Base.gitlab-ci.yml  
-  - template: Jobs/SAST-IaC.gitlab-ci.yml   
 
-stages:
-  - validate
-  - test
-  - build
-  - deploy
-  - cleanup 
-  - install_helm
-  - smoke_test 
-
-fmt:
-  extends: .terraform:fmt
-  before_script:
-    - apk add --no-cache python3 py3-pip 
-    - pip3 install --upgrade pip 
-    - pip3 install --no-cache-dir awscli
-    - aws --version
-  needs: []
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
-
-validate:
-  extends: .terraform:validate
-  before_script:
-    - apk add --no-cache python3 py3-pip 
-    - pip3 install --upgrade pip 
-    - pip3 install --no-cache-dir awscli
-    - aws --version
-  needs: []
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
-
-build:
-  extends: .terraform:build
-  resource_group: $TF_STATE_NAME
-  environment:
-    name: $TF_STATE_NAME
-    action: prepare
-  before_script:
-    - apk add --no-cache python3 py3-pip 
-    - pip3 install --upgrade pip 
-    - pip3 install --no-cache-dir awscli
-    - aws --version
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
- 
-deploy: # pipeline currently doesn't scale according to current terraform configurations
-  extends: .terraform:deploy
-  resource_group: $TF_STATE_NAME
-  dependencies:
-    - build
-  environment:
-    name: $TF_STATE_NAME
-    action: start
-  before_script:
-    - apk add --no-cache python3 py3-pip 
-    - pip3 install --upgrade pip 
-    - pip3 install --no-cache-dir awscli
-    - aws --version
-  rules:
-    - changes:
-        paths:
-          - open5gs/infrastructure/eks/*.tf
-
-cleanup:
-  extends: .terraform:destroy
-  resource_group: $TF_STATE_NAME
-  dependencies:
-    - deploy
-  environment:
-    name: $TF_STATE_NAME
-    action: stop
-  before_script:
-    - apk add --no-cache python3 py3-pip 
-    - pip3 install --upgrade pip 
-    - pip3 install --no-cache-dir awscli
-    - aws --version
-  when: manual
-
-kics_scan:
-  image: 
-    name: checkmarx/kics
-    entrypoint: [""]
-  stage: test
+ue_populate_random:
   allow_failure: true
-  script:
-    - apk update
-    - apk add ca-certificates openssl
-    - apk add curl
-    - curl -LO https://get.helm.sh/helm-v3.7.0-linux-amd64.tar.gz
-    - tar -zxvf helm-v3.7.0-linux-amd64.tar.gz
-    - mv linux-amd64/helm /usr/local/bin/
-    - helm version
-    - helm repo add openverso https://gradiant.github.io/openverso-charts/ 
-    - helm template open5gs openverso/open5gs --values open5gs_values.yml > open5gs.yaml 
-    - kics scan -p open5gs.yaml -t Kubernetes | tee security-scan.txt
-  artifacts:
-    paths: 
-      - security-scan.txt
-      - open5gs.yaml
-      
-install_open5gs:
-  image:
-    name: alpine/helm
-    entrypoint: [""]
-  stage: install_helm
+  stage: subscribe
+  image: ubuntu:latest
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
-  environment:
-    name: open5gs_cluster 
-  script:
-    - apk add --no-cache python3 py3-pip 
-    - pip3 install --upgrade pip 
-    - pip3 install --no-cache-dir awscli
-    - aws --version
+  environment: 
+    name: open5gs_cluster
+  artifacts:
+    paths:
+      - IMSI_ID
+  before_script:
+  # Install dependencies and connect to cluster
+    - apt-get update && apt-get install -y curl unzip
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
-    - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
-    - kubectl apply -f openverso_namespace.yaml
-    - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm upgrade --install open5gs openverso/open5gs --namespace openverso --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/5gSA_ues_values.yaml
+    - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
+  script:
+# Generate random 10-digit number for IMSI
+    - digits=10
+    - a=$(date +%s)
+    - b=$((a*RANDOM))
+    - >
+      while [ ${#b} -lt 12 ]; do
+        b="${b}$RANDOM"
+      done
+      IMSI_ID=$(echo "${b:0:digits}")
+# exec into populate pod and create UE subscription with that number
+    - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
+    - kubectl -n openverso exec $POPULATE_POD --  open5gs-dbctl add_ue_with_slice ${CI_PIPELINE_ID} 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet 1 111111
+    - echo $IMSI_ID > IMSI_ID
 
-install_ueransim:
+
+#Job that runs ueransim using that subscriber ID and executes script
+
+deploy test-ue:
   image:
     name: alpine/helm
     entrypoint: [""]
-  stage: install_helm
+  stage: deploy
+  needs:
+    - job: ue_populate_random
+      artifacts: true
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
@@ -160,52 +69,76 @@ install_ueransim:
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-    - helm upgrade --install ueransim-gnb openverso/ueransim-gnb --namespace openverso --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
+# source IMSI_ID value
+    - IMSI_ID=$(cat IMSI_ID)
+    - > 
+      helm -n openverso install ueransim-ues-smoke-test  openverso/ueransim-ues \
+        --set ues.initialMSISDN="${IMSI_ID}"   \
+        --setcommonLabels "gitlab-pipeline=${CI_PIPELINE_ID}"
+        --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
 
-ue_populate:
-  allow_failure: true
-  stage: smoke_test
+
+smoke_test_scheduled:
   image: ubuntu:latest
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
-  environment: 
+  needs:
+    - job: deploy test-ue
+    - job: ue_populate_random
+      artifacts: true
+  stage: test
+  environment:
+    name: open5gs_cluster
+  artifacts:
+    paths:
+      - over5g.txt
+      - overinternet.txt 
+  script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
+    - chmod +x kubectl
+    - mv kubectl /usr/local/bin/
+    - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
+    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l gitlab-pipeline=${CI_PIPELINE_ID})
+    - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
+    - kubectl -n openverso cp ./curl-format.txt $UE_POD:/tmp/curl-format.txt
+    - kubectl -n openverso exec $UE_POD -- /tmp/ueransim_smoke_test.sh 
+    - kubectl -n openverso cp $UE_POD:over5g.txt ./over5g.txt
+    - kubectl -n openverso cp $UE_POD:overinternet.txt ./overinternet.txt 
+    - cat over5g.txt overinternet.txt 
+
+
+# Job that removes subscriber created in previous job
+
+cleanup:
+  image:
+    name: alpine/helm
+    entrypoint: [""]
+  variables:
+    REGION: us-east-1
+    CLUSTER_NAME: cntf-open5gs-cluster
+  needs:
+    - job: smoke_test_scheduled
+  stage: cleanup
+  environment:
     name: open5gs_cluster
   script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    - unzip awscliv2.zip
-    - ./aws/install
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
-    - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
+    - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
+    - helm repo add openverso https://gradiant.github.io/openverso-charts/
+# remove smoke-test helm release
+    - helm -n openverso uninstall ueransim-ues-smoke-test
+# delete test IMSI from subscriber database
+    - IMSI_ID=$(cat IMSI_ID)
     - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
-    - kubectl -n openverso cp ./ue_populate.sh $POPULATE_POD:/tmp/ue_populate.sh
-    - kubectl -n openverso exec $POPULATE_POD -- /tmp/ue_populate.sh
-
-smoke_test:
-  image: ubuntu:latest
-  variables:
-    REGION: us-east-1
-    CLUSTER_NAME: cntf-open5gs-cluster
-  needs: 
-    - ue_populate
-  stage: smoke_test
-  environment:
-    name: open5gs_cluster 
-  script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    - unzip awscliv2.zip
-    - ./aws/install
-    - chmod +x kubectl
-    - mv kubectl /usr/local/bin/
-    - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
-    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=ues)
-    - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
-    - kubectl -n openverso exec $UE_POD -- /tmp/ueransim_smoke_test.sh
- 
-    
-    
+    - kubectl -n openverso exec $POPULATE_POD --  open5gs-dbctl remove ${IMSI_ID}
