@@ -102,8 +102,8 @@ smoke_test_scheduled:
     name: open5gs_cluster
   artifacts:
     paths:
-      - over5g.txt
-      - overinternet.txt 
+      - over5g.json
+      - overinternet.json 
   script:
     - apt-get update && apt-get install -y curl unzip
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
