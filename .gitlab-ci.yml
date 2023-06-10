@@ -115,11 +115,11 @@ smoke_test_scheduled:
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
     - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/instance=ueransim-ues-smoke-test)
     - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
-    - kubectl -n openverso cp ./curl-format.txt $UE_POD:/tmp/curl-format.txt
     - kubectl -n openverso exec $UE_POD -- /tmp/ueransim_smoke_test.sh 
-    - kubectl -n openverso cp $UE_POD:/over5g.txt ./over5g.txt
-    - kubectl -n openverso cp $UE_POD:/overinternet.txt ./overinternet.txt 
-    - cat over5g.txt overinternet.txt 
+    - kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
+    - kubectl -n openverso cp $UE_POD:/overinternet.json ./overinternet.json 
+    - jq '.' over5g.json 
+    - jq '.' overinternet.txt 
 
 
 # Job that removes subscriber created in previous job
