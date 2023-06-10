@@ -74,6 +74,11 @@ deploy test-ue:
     - IMSI_ID=$(cat IMSI_ID)
     - >
       COMMON_LABEL=$(jq -n --arg CI_PIPELINE_ID "$CI_PIPELINE_ID" '{"gitlab-pipeline": $CI_PIPELINE_ID}')
+    - >
+      helm template -n openverso ueransim-ues-smoke-test  openverso/ueransim-ues \
+        --set ues.initialMSISDN="${IMSI_ID}"   \
+        --set-json commonLabels="${COMMON_LABEL}" \
+        --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
     - > 
       helm -n openverso install ueransim-ues-smoke-test  openverso/ueransim-ues \
         --set ues.initialMSISDN="${IMSI_ID}"   \
@@ -145,3 +150,6 @@ cleanup:
     - IMSI_ID=$(cat IMSI_ID)
     - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl -n openverso exec $POPULATE_POD --  open5gs-dbctl remove ${IMSI_ID}
+  rules:
+    - when: on_failure
+    - when: on_success
