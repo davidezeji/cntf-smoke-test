@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 apk add --no-cache jq
 
