@@ -111,6 +111,7 @@ smoke_test_scheduled:
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
+    - kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l gitlab-pipeline=${CI_PIPELINE_ID}
     - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l gitlab-pipeline=${CI_PIPELINE_ID})
     - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n openverso cp ./curl-format.txt $UE_POD:/tmp/curl-format.txt
@@ -131,6 +132,8 @@ cleanup:
     CLUSTER_NAME: cntf-open5gs-cluster
   needs:
     - job: smoke_test_scheduled
+    - job: ue_populate_random
+      artifacts: true
   stage: cleanup
   environment:
     name: open5gs_cluster
