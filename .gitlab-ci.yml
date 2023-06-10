@@ -154,5 +154,4 @@ cleanup:
     - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl -n openverso exec $POPULATE_POD --  open5gs-dbctl remove ${IMSI_ID}
   rules:
-    - when: on_failure
-    - when: on_success
+    - when: always
