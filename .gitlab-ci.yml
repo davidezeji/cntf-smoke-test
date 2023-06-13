@@ -115,7 +115,7 @@ smoke_test_scheduled:
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
     - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/instance=ueransim-ues-smoke-test)
     - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
-    - kubectl -n openverso exec $UE_POD -- /tmp/ueransim_smoke_test.sh 
+    - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     - kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
     - kubectl -n openverso cp $UE_POD:/overinternet.json ./overinternet.json 
 
@@ -158,6 +158,7 @@ cleanup:
 
 
 simulate_user_activity:
+  allow_failure: true
   image:
     name: alpine/helm
     entrypoint: [""]
@@ -182,7 +183,7 @@ simulate_user_activity:
         --set image.registry=935370813358.dkr.ecr.us-east-1.amazonaws.com --set image.repository=cntf-ueransim-puppeteer \
         --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
     - kubectl -n openverso rollout status deployment ueransim-ues-puppeteer-${SCRIPT}
-    - kubectl -n openverso exec deployment.apps/ueransim-ues-puppeteer-${SCRIPT} -- bash -c "node /app/${SCRIPT}.js >> /proc/1/fd/1"
+    - kubectl -n openverso exec deployment.apps/ueransim-ues-puppeteer-${SCRIPT} -- bash -c "node /app/${SCRIPT}.js >&1"
   parallel:
     matrix:
       - SCRIPT: youtube-search
