@@ -199,7 +199,8 @@ puppeteer-cleanup:
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
-  needs: simulate_user_activity
+  needs: 
+    - simulate_user_activity
   stage: cleanup
   environment:
     name: open5gs_cluster
