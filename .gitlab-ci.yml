@@ -166,6 +166,9 @@ simulate_user_activity:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
   stage: test
+  artifacts:
+    paths:
+      - ${ARTIFACT}
   script:
     - apk add --no-cache python3 py3-pip 
     - pip3 install --upgrade pip 
@@ -184,12 +187,15 @@ simulate_user_activity:
         --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
     - kubectl -n openverso rollout status deployment ueransim-ues-puppeteer-${SCRIPT}
     - kubectl -n openverso exec deployment.apps/ueransim-ues-puppeteer-${SCRIPT} -- bash -c "node /app/${SCRIPT}.js >&1"
+    - kubectl -n openverso cp deployment.apps/ueransim-ues-puppeteer-${SCRIPT}:/app/${ARTIFACT} ./${ARTIFACT}
   parallel:
     matrix:
       - SCRIPT: youtube-search
         IMSI_ID: 9090909090
+        ARTIFACT: youtube_invaders_video.png
       - SCRIPT: amazon-search
         IMSI_ID: 9090909091
+        ARTIFACT: 5g_reference_guide.png
       - SCRIPT: devtools-search
         IMSI_ID: 9090909092
 
