@@ -181,7 +181,7 @@ simulate_user_activity:
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
 # install the ueransim helm chart, but using the image we build that includes puppeteer and our test scripts
     - >
-      COMMON_LABEL=$(jq -n --arg CI_JOB_ID "$CI_JOB_ID" --arg SCRIPT $SCRIPT '{"gitlab-job": $CI_JOB_ID-$SCRIPT}')
+      COMMON_LABEL=$(jq -n --arg CI_JOB_ID "$CI_JOB_ID" --arg SCRIPT "$SCRIPT" '{"gitlab-job": "$CI_JOB_ID-$SCRIPT"}')
     - > 
       helm -n openverso upgrade --install ueransim-ues-puppeteer-${SCRIPT}  openverso/ueransim-ues \
         --set ues.initialMSISDN="${IMSI_ID}"   \
