@@ -155,3 +155,71 @@ cleanup:
     - kubectl -n openverso exec $POPULATE_POD --  open5gs-dbctl remove ${IMSI_ID}
   rules:
     - when: always
+
+
+simulate_user_activity:
+  image:
+    name: alpine/helm
+    entrypoint: [""]
+  variables:
+    REGION: us-east-1
+    CLUSTER_NAME: cntf-open5gs-cluster
+  stage: test
+  script:
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - chmod +x kubectl
+    - mv kubectl /usr/local/bin/
+    - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
+    - helm repo add openverso https://gradiant.github.io/openverso-charts/
+# install the ueransim helm chart, but using the image we build that includes puppeteer and our test scripts
+    - > 
+      helm -n openverso upgrade --install ueransim-ues-puppeteer-${SCRIPT}  openverso/ueransim-ues \
+        --set ues.initialMSISDN="${IMSI_ID}"   \
+        --set image.registry=935370813358.dkr.ecr.us-east-1.amazonaws.com --set image.repository=cntf-ueransim-puppeteer \
+        --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
+    - kubectl -n openverso rollout status deployment ueransim-ues-puppeteer-${SCRIPT}
+    - kubectl -n openverso exec deployment.apps/ueransim-ues-puppeteer-${SCRIPT} -- bash -c "node /app/${SCRIPT}.js >> /proc/1/fd/1"
+  parallel:
+    matrix:
+      - SCRIPT: youtube-search
+        IMSI_ID: 9090909090
+      - SCRIPT: amazon-search
+        IMSI_ID: 9090909091
+      - SCRIPT: devtools-search
+        IMSI_ID: 9090909092
+
+puppeteer-cleanup:
+  image:
+    name: alpine/helm
+    entrypoint: [""]
+  variables:
+    REGION: us-east-1
+    CLUSTER_NAME: cntf-open5gs-cluster
+  needs: simulate_user_activity
+  stage: cleanup
+  environment:
+    name: open5gs_cluster
+  script:
+    - apk add --no-cache python3 py3-pip 
+    - pip3 install --upgrade pip 
+    - pip3 install --no-cache-dir awscli
+    - aws --version
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - chmod +x kubectl
+    - mv kubectl /usr/local/bin/
+    - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
+    - helm repo add openverso https://gradiant.github.io/openverso-charts/
+# remove smoke-test helm release
+    - helm -n openverso uninstall ueransim-ues-puppeteer-${SCRIPT}
+  parallel:
+    matrix:
+      - SCRIPT: 
+          - youtube-search
+          - amazon-search
+          - devtools-search
+  rules:
+    - when: always
