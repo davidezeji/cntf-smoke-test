@@ -181,7 +181,7 @@ simulate_user_activity:
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
 # install the ueransim helm chart, but using the image we build that includes puppeteer and our test scripts
     - >
-      COMMON_LABEL=$(jq -n --arg CI_JOB_ID "${CI_JOB_ID}" --arg SCRIPT "${SCRIPT}" '{"gitlab-job": "$CI_JOB_ID-$SCRIPT"}')
+      COMMON_LABEL=$(jq -n --arg CI_JOB_ID "${CI_JOB_ID}" --arg SCRIPT "${SCRIPT}" '{"gitlab-job": $CI_JOB_ID, "puppeteer-script": $SCRIPT}')
     - > 
       helm -n openverso upgrade --install ueransim-ues-puppeteer-${SCRIPT}  openverso/ueransim-ues \
         --set ues.initialMSISDN="${IMSI_ID}"   \
@@ -191,7 +191,7 @@ simulate_user_activity:
         --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
     - kubectl -n openverso rollout status deployment ueransim-ues-puppeteer-${SCRIPT}
     - kubectl -n openverso exec deployment.apps/ueransim-ues-puppeteer-${SCRIPT} -- bash -c "node /app/${SCRIPT}.js >&1"
-    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l gitlab-job=$CI_JOB_ID-$SCRIPT)
+    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l gitlab-job=$CI_JOB_ID)
     - kubectl -n openverso cp ${UE_POD}:/app/${ARTIFACT} ./${ARTIFACT}
   parallel:
     matrix:
