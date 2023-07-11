@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# this script uploads the local over5g.json file as an object into AWS S3
+# this script uploads the local test result files (e.g. over5g.json & overinternet.json) as objects in an AWS S3 bucket.
 
 import os
 import pathlib
