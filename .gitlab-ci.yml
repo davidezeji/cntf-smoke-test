@@ -118,6 +118,8 @@ smoke_test_scheduled:
     - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     - kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
     - kubectl -n openverso cp $UE_POD:/overinternet.json ./overinternet.json 
+    - python3 ./s3_test_results_coralogix.py # converts over5g.json & overinternet files to S3 objects
+    - sh ./update_s3_test_results.sh # continuously updates new local test data in S3 objects
 
 
 # Job that removes subscriber created in previous job
