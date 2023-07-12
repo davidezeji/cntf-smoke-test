@@ -107,7 +107,9 @@ smoke_test_scheduled:
   script:
     - apt update
     - apt install -y python3
-    - python3 --version # installation steps for python3 on ubuntu
+    - python3 --version 
+    - apt-get install -y python3-pip
+    - pip3 install boto3 # The above installation steps are for installing python3 and boto3 on ubuntu
     - apt-get update && apt-get install -y curl unzip
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
