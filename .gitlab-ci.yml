@@ -105,6 +105,9 @@ smoke_test_scheduled:
       - over5g.json
       - overinternet.json 
   script:
+    - apt update
+    - apt install python3.8
+    - python3 --version # installation steps for python3 on ubuntu
     - apt-get update && apt-get install -y curl unzip
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -118,7 +121,7 @@ smoke_test_scheduled:
     - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     - kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
     - kubectl -n openverso cp $UE_POD:/overinternet.json ./overinternet.json 
-    - python3 ./s3_test_results_coralogix.py # converts over5g.json & overinternet files to S3 objects
+    - python3 ./s3_test_results_coralogix.py # converts over5g.json & overinternet.json files into objects in an S3 bucket
     - sh ./update_s3_test_results.sh # continuously updates new local test data in S3 objects
 
 
