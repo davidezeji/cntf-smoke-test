@@ -61,6 +61,9 @@ deploy test-ue:
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
+  artifacts: # DELETE
+    paths: # DELETE
+      - IMSI_ID # DELETE
   environment:
     name: open5gs_cluster 
   script: 
@@ -123,6 +126,7 @@ smoke_test_scheduled:
     - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     - kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
     - kubectl -n openverso cp $UE_POD:/overinternet.json ./overinternet.json
+    - IMSI_ID=$(cat IMSI_ID) >> over5g.json overinternet.json # Delete
     - apt-get install -y python3-pip #install pip
     - pip3 install boto3 # install boto3
     - export PYTHONPATH="/usr/local/lib/python3.8/site-packages"  # Adjust the path if necessary 
