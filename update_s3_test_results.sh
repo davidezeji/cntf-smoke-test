@@ -1,4 +1,4 @@
-#!/bin/bash
+#!usr/bin/env bash
 
 # this script updates the objects in the s3 bucket "cntf-open5gs-coralogix-test-results" with any changes made to their corresponding local files. 
 
