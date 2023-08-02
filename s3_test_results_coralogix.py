@@ -11,7 +11,7 @@ import botocore.exceptions
 BASE_DIR = pathlib.Path(__file__).parent.resolve()
 FILE_DIR = os.path.join(BASE_DIR)
 
-BUCKET_NAME = 'cntf-open5gs-coralogix-test-results'
+BUCKET_NAME = 'cntf-open5gs-test-results'
 AWS_REGION = 'us-east-1'
 
 def upload_file(file_name, bucket, object_name):
