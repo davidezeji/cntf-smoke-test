@@ -4,7 +4,7 @@
 
 udpate_s3() {
    aws s3 cp ./over5g.json s3://cntf-open5gs-test-results/over5g.json
-   aws s3 cp ./overinternet.json s3://ccntf-open5gs-test-results/overinternet.json
+   aws s3 cp ./overinternet.json s3://cntf-open5gs-test-results/overinternet.json
 }
 
 udpate_s3
