@@ -121,7 +121,7 @@ smoke_test_scheduled:
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
     # - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/instance=ueransim-ues-smoke-test)
-    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l pod-template-hash=5dd7cdf7db) # here we allocated the ueransim-gnb ues-pod to the variable "UE_POD" as the ues-smoke-test pod was unable to curl yahoo over uesimtun0
+    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l pod-template-hash=697554b858) # here we allocated the ueransim-gnb ues-pod to the variable "UE_POD" as the ues-smoke-test pod was unable to curl yahoo over uesimtun0
     - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     - kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
