@@ -200,7 +200,7 @@ simulate_user_activity:
     - > 
       helm -n openverso upgrade --install ueransim-ues-puppeteer-${SCRIPT}  openverso/ueransim-ues \
         --set ues.initialMSISDN="${IMSI_ID}"   \
-        --set image.registry=935370813358.dkr.ecr.us-east-1.amazonaws.com --set image.repository=cntf-ueransim-puppeteer \
+        --set image.registry=018300759195.dkr.ecr.us-east-1.amazonaws.com --set image.repository=cntf-ueransim-puppeteer \
         --set-json commonLabels="${COMMON_LABEL}" \
         --set-json podLabels="${COMMON_LABEL}" \
         --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
