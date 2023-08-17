@@ -126,7 +126,7 @@ smoke_test_scheduled:
     - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     - kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
     - kubectl -n openverso cp $UE_POD:/overinternet.json ./overinternet.json
-    - IMSI_ID=$(cat IMSI_ID) >> over5g.json # Delete
+    - sh ./update_pupeteer_test_results.sh #added script that copies test result changes in youtube pupeteer pod into local files
     - apt-get install -y python3-pip #install pip
     - pip3 install boto3 # install boto3
     - export PYTHONPATH="/usr/local/lib/python3.8/site-packages"  # Adjust the path if necessary 
