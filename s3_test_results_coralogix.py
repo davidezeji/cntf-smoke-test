@@ -42,3 +42,15 @@ if __name__ == '__main__':
 if __name__ == '__main__':
     file_name = os.path.join(FILE_DIR, 'overinternet.json')
     upload_file(file_name=file_name, bucket=BUCKET_NAME, object_name='overinternet.json')
+
+if __name__ == '__main__':
+    file_name = os.path.join(FILE_DIR, 'youtube-pupeteer-load-time.txt')
+    upload_file(file_name=file_name, bucket=BUCKET_NAME, object_name='youtube-pupeteer-load-time.txt')
+
+if __name__ == '__main__':
+    file_name = os.path.join(FILE_DIR, 'youtube-pupeteer-screenshot.png')
+    upload_file(file_name=file_name, bucket=BUCKET_NAME, object_name='youtube-pupeteer-screenshot.png')
+
+if __name__ == '__main__':
+    file_name = os.path.join(FILE_DIR, 'youtube-network-requests.txt')
+    upload_file(file_name=file_name, bucket=BUCKET_NAME, object_name='youtube-network-requests.txt')
