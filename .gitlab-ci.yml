@@ -228,7 +228,7 @@ Update_test_results:
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
-  stage: update_test
+  stage: update_tests
   artifacts:
     paths:
       - ${ARTIFACT}
