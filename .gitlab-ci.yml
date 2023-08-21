@@ -233,6 +233,7 @@ update_test_results:
     - apk add --no-cache python3 py3-pip jq
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
+    - pip3 install --no-cache-dir boto3  # Install boto3 library for AWS interaction
     - aws --version
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - chmod +x kubectl
@@ -242,7 +243,7 @@ update_test_results:
     - sh ./update_local_test_results.sh
     - python3 ./s3_test_results_coralogix.py # converts over5g.json & overinternet.json files into objects in an S3 bucket
     - sh ./update_s3_test_results.sh # continuously updates new local test data in S3 objects
-   
+
     
 puppeteer-cleanup:
   image:
