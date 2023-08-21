@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # this file goes inside the youtube pupeteer container copies the updated logs from tests run, and stores them locally
+
 YOUTUBE_PUPETEER_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l puppeteer-script=youtube-search)
 
 update_local_load_time () {
