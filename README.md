@@ -1,7 +1,7 @@
 # CNTF - Smoke Test
 
 ## Purpose
-This source code repository stores the configurations to subscribe and connect new UEs to the 5g network and simulate traffic over 5g network interfaces and the internet.
+This source code repository stores the configurations to subscribe and connect new UEs to the 5g network and make HTTP requests to webservers over the internet and 5g network.
 
 ## Project structure
 ```
