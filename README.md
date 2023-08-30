@@ -27,7 +27,7 @@ This source code repository stores the configurations to subscribe and connect n
 └── openverso_ueransim_ues_values.yml 
 |
 |
-└── ueransim_smoke_test.sh             performs a curl test over both the network and the internet
+└── ueransim_smoke_test.sh             performs a curl test over both the 5g network and the internet
 |
 |
 └── over5g.json                        local storage file for test results performed on "ueransim-gnb-ues" pod (curl over 5g network)
