@@ -24,7 +24,7 @@ Steps:
     * Note: *You must have an individual account created by Coralogix to gain access to this tenant.*
 * To view raw data resulting from test runs, please look at the data stored in AWS S3 buckets dedicated to CNTF.
 
-## Project structure
+## Project Structure
 ```
 ├── open5gs
 |   ├── infrastructure                 contains infrastructure-as-code and helm configurations for open5gs & ueransim
