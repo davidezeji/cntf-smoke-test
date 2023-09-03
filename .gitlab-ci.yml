@@ -60,9 +60,9 @@ deploy test-ue:
   variables:
     REGION: us-east-1
     CLUSTER_NAME: cntf-open5gs-cluster
-  artifacts: # DELETE
-    paths: # DELETE
-      - IMSI_ID # DELETE
+  artifacts: 
+    paths: 
+      - IMSI_ID 
   environment:
     name: open5gs_cluster 
   script: 
@@ -110,7 +110,7 @@ smoke_test_scheduled:
   script:
     - apt update
     - apt install -y python3
-    - python3 --version # above three steps install python 
+    - python3 --version 
     - apt-get update && apt-get install -y curl unzip
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -119,8 +119,7 @@ smoke_test_scheduled:
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
-    # - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/instance=ueransim-ues-smoke-test)
-    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l pod-template-hash=697554b858) # here we allocated the ueransim-gnb ues-pod to the variable "UE_POD" as the ues-smoke-test pod was unable to curl yahoo over uesimtun0
+    - UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l pod-template-hash=697554b858) 
     - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     
@@ -138,7 +137,7 @@ update_test_results:
     - apk add --no-cache python3 py3-pip jq
     - pip3 install --upgrade pip 
     - pip3 install --no-cache-dir awscli
-    - pip3 install --no-cache-dir boto3  # Install boto3 library for AWS interaction
+    - pip3 install --no-cache-dir boto3  
     - aws --version
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - chmod +x kubectl
