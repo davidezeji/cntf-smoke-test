@@ -75,7 +75,7 @@ deploy test-ue:
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --region $REGION --name $CLUSTER_NAME
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
-# source IMSI_ID value
+source IMSI_ID value
     # - IMSI_ID=$(cat IMSI_ID)
     # - >
     #   COMMON_LABEL=$(jq -n --arg CI_PIPELINE_ID "$CI_PIPELINE_ID" '{"gitlab-pipeline": $CI_PIPELINE_ID}')
@@ -90,18 +90,18 @@ deploy test-ue:
     #     --set-json commonLabels="${COMMON_LABEL}" \
     #     --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
     - IMSI_ID=$(cat IMSI_ID)
-        - >
-          COMMON_LABEL=$(jq -n --arg CI_PIPELINE_ID "$CI_PIPELINE_ID" '{"gitlab-pipeline": $CI_PIPELINE_ID}')
-        - >
-          helm template -n openverso ueransim-gnb  openverso/ueransim-ues \
-            --set ues.initialMSISDN="${IMSI_ID}"   \
-            --set-json commonLabels="${COMMON_LABEL}" \
-            --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml         # Installing new ueransim 
-        - > 
-          helm -n openverso upgrade --install ueransim-gnb  openverso/ueransim-ues \
-            --set ues.initialMSISDN="${IMSI_ID}"   \
-            --set-json commonLabels="${COMMON_LABEL}" \
-            --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
+    - >
+      COMMON_LABEL=$(jq -n --arg CI_PIPELINE_ID "$CI_PIPELINE_ID" '{"gitlab-pipeline": $CI_PIPELINE_ID}')
+    - >
+      helm template -n openverso ueransim-gnb  openverso/ueransim-ues \
+        --set ues.initialMSISDN="${IMSI_ID}"   \
+        --set-json commonLabels="${COMMON_LABEL}" \
+        --values cntf_gnb_ues_values.yaml         # Installing new ueransim 
+    - > 
+      helm -n openverso upgrade --install ueransim-gnb  openverso/ueransim-ues \
+        --set ues.initialMSISDN="${IMSI_ID}"   \
+        --set-json commonLabels="${COMMON_LABEL}" \
+        --values cntf_gnb_ues_values.yaml 
 
 smoke_test_scheduled:
   image: ubuntu:latest
