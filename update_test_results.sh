@@ -14,7 +14,7 @@ update_local_test_data () {
 udpate_s3() {
    aws s3 cp ./over5g.json s3://cntf-open5gs-test-results/over5g.json
    aws s3 cp ./overinternet.json s3://cntf-open5gs-test-results/overinternet.json
-   aws s3 cp ./openverso $POPULATE_POD:/time_to_populate_database.txt s3://cntf-open5gs-test-results/time_to_populate_database.txt  # update s3 with the time it takes to add a new IMSI_ID to the database
+   aws s3 cp ./time_to_populate_database.txt s3://cntf-open5gs-test-results/time_to_populate_database.txt  # update s3 with the time it takes to add a new IMSI_ID to the database
 }
 
 update_local_test_data
