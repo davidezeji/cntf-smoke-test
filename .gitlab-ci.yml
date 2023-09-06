@@ -83,15 +83,15 @@ deploy test-ue:
     - >
       COMMON_LABEL=$(jq -n --arg CI_PIPELINE_ID "$CI_PIPELINE_ID" '{"gitlab-pipeline": $CI_PIPELINE_ID}')
     - >
-      helm template -n openverso ueransim-gnb  openverso/ueransim-ues \
+      helm template -n openverso ueransim-ues-smoke-test  openverso/ueransim-ues \
         --set ues.initialMSISDN="${IMSI_ID}"   \
         --set-json commonLabels="${COMMON_LABEL}" \
-        --values cntf_gnb_ues_values.yaml
+        --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
     - > 
-      helm -n openverso upgrade --install ueransim-gnb  openverso/ueransim-ues \
+      helm -n openverso upgrade --install ueransim-ues-smoke-test  openverso/ueransim-ues \
         --set ues.initialMSISDN="${IMSI_ID}"   \
         --set-json commonLabels="${COMMON_LABEL}" \
-        --values cntf_gnb_ues_values.yaml
+        --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
    
 
 smoke_test_scheduled:
