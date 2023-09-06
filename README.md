@@ -60,7 +60,7 @@ Steps:
 └── s3_test_results_coralogix.py       converts local files into s3 objects 
 |  
 |            
-└── ue_populate.sh                     subscribes a ue (user equipment) to the 5g network
+└── ue_populate_database.sh            subscribes a ue with a random imsi id into the open5gs database and catpures the time output of this process
 |
 |
 └── update_test_results.sh             updates test result data from "ueransim-gnb-ues" pod both locally and in aws                                           
