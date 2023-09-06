@@ -54,3 +54,7 @@ if __name__ == '__main__':
 if __name__ == '__main__':
     file_name = os.path.join(FILE_DIR, 'youtube-network-requests.txt')
     upload_file(file_name=file_name, bucket=BUCKET_NAME, object_name='youtube-network-requests.txt')
+
+if __name__ == '__main__':
+    file_name = os.path.join(FILE_DIR, 'time_to_populate_database.txt')
+    upload_file(file_name=file_name, bucket=BUCKET_NAME, object_name='time_to_populate_database.txt') # create an object called 'time_to_populate_database.txt' in s3 bucket 'cntf-open5gs-test-results'
