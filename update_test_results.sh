@@ -3,6 +3,7 @@
 # this script outputs test data from within the "ueransim-gnb-ues" pod and into local files called "over5g.json" & "overinternet.json", then it reflects any changes made to these local files in S3.
    
 UE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l pod-template-hash=697554b858)
+POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
 
 update_local_test_data () {
    kubectl -n openverso cp $UE_POD:/over5g.json ./over5g.json
