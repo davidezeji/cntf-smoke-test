@@ -153,6 +153,8 @@ update_test_results:
     - helm repo add openverso https://gradiant.github.io/openverso-charts/
     - python3 ./s3_test_results_coralogix.py # converts over5g.json & overinternet.json files into objects in an S3 bucket
     - sh ./update_test_results.sh # continuously updates new local test data and S3
+  rules:
+    - when: always
 
 
 # Job that removes subscriber from the network
