@@ -3,8 +3,6 @@ set -x # run in debug mode (see every step of script printed on console)
 set -e # quit script as soon as an error occurs
 set -o pipefail # ensure failure of pipe commands is accurately accounted for
 
-POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
-
 install_dependencies () {
     apt update
     apt install -y curl
