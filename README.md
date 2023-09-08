@@ -66,6 +66,6 @@ Raw data: To view raw data resulting from test runs, please look at the data sto
 └── update_test_results.sh             updates test result data from "ueransim-gnb-ues" pod both locally and in aws
 |
 |
-└── time_to ue_populate_database.txt   local storage file for collecting logs relating to the time it takes for new ues to be registered on the network                                        
+└── time_to_populate_database.txt      local storage file for collecting logs relating to the time it takes for new ues to be registered on the network                                        
 ```
 
