@@ -6,6 +6,9 @@ stages:
   - cleanup
 
 
+#Create one new UE on the network
+
+
 ue_populate_random:
   allow_failure: true
   stage: subscribe
@@ -28,25 +31,8 @@ ue_populate_random:
     - chmod +x kubectl
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
-    - chmod +x ue_populate_database.sh # making this file executable
+    - chmod +x ue_populate_database.sh # please consider applying this command manually 
   script:
-# Generate random 10-digit number for IMSI
-#     - digits=10
-#     - a=$(date +%s)
-#     - b=$((a*RANDOM))
-#     - >
-#       while [ ${#b} -lt 12 ]; do
-#         b="${b}$RANDOM"
-#       done
-#     - IMSI_ID=$(echo "${b:0:digits}")
-#     - printf $IMSI_ID
-# # exec into populate pod and create UE subscription with that number
-#     - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
-#     # - kubectl -n openverso exec $POPULATE_POD --  open5gs-dbctl add_ue_with_slice ${CI_PIPELINE_ID} 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet 1 111111
-#     # Here you are capturing the time it takes to populate the database with a new IMSI_ID and storing it in the "time_to_populate_database.txt" file
-#     - >
-#        { time -p kubectl -n openverso exec $POPULATE_POD -- open5gs-dbctl add_ue_with_slice ${CI_PIPELINE_ID} 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet 1 111111; } 2>&1 | grep real | awk '{print "creation_time_db: " $2}' >> time_to_populate_database.txt
-# # write the IMSI_ID as an artifact to be used in later jobs
     - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl cp ./ue_populate_database.sh -n openverso $POPULATE_POD:/
     - kubectl exec -n openverso $POPULATE_POD -- bash -c "/ue_populate_database.sh"
@@ -98,6 +84,9 @@ deploy test-ue:
         --values https://raw.githubusercontent.com/DISHDevEx/napp/main/napp/open5gs_values/gnb_ues_values.yaml
    
 
+# Execute script which performs curls over the network vs the internet
+
+
 smoke_test_scheduled:
   image: ubuntu:latest
   variables:
@@ -130,6 +119,9 @@ smoke_test_scheduled:
     - kubectl -n openverso cp ./ueransim_smoke_test.sh $UE_POD:/tmp/ueransim_smoke_test.sh
     - kubectl -n openverso exec $UE_POD -- bash -c "/tmp/ueransim_smoke_test.sh >&1"
     
+
+# Update local files and S3
+
 
 update_test_results:
   allow_failure: true
