@@ -32,10 +32,10 @@ ue_populate_random:
     - mv kubectl /usr/local/bin/
     - aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION
     - chmod +x ue_populate_database.sh # please consider applying this command manually 
-    - chmod +w time_to_populate_database.txt
+    - chmod +w time_to_populate_database.txt # please consider applying this command manually 
+    - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl -n openverso cp ./time_to_populate_database.txt $POPULATE_POD:/time_to_populate_database.txt
   script:
-    - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl cp ./ue_populate_database.sh -n openverso $POPULATE_POD:/
     - kubectl exec -n openverso $POPULATE_POD -- bash -c "/ue_populate_database.sh"
     - echo $IMSI_ID > IMSI_ID
