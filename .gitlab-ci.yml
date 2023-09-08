@@ -181,8 +181,6 @@ cleanup:
 # remove smoke-test helm release
     - helm -n openverso uninstall ueransim-ues-smoke-test
 # delete test IMSI from subscriber database
-    - IMSI_ID=$(cat IMSI_ID)
-    - printf $IMSI_ID
     - POPULATE_POD=$(kubectl -n openverso get pod --output=jsonpath={.items..metadata.name} -l app.kubernetes.io/component=populate)
     - kubectl -n openverso exec $POPULATE_POD --  open5gs-dbctl remove ${IMSI_ID}
   rules:
