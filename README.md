@@ -48,11 +48,6 @@ Raw data: To view raw data resulting from test runs, please look at the data sto
 └── README.md  
 |
 |
-└── open5gs_values.yml                 these values files contain configurations to customize resources defined in the open5gs & ueransim helm charts
-└── openverso_ueransim_gnb_values.yml                 
-└── openverso_ueransim_ues_values.yml 
-|
-|
 └── ueransim_smoke_test.sh             performs a curl test over both the 5g network and the internet
 |
 |
@@ -68,6 +63,9 @@ Raw data: To view raw data resulting from test runs, please look at the data sto
 └── ue_populate_database.sh            subscribes a ue with a random imsi id into the open5gs database and catpures the time output of this process
 |
 |
-└── update_test_results.sh             updates test result data from "ueransim-gnb-ues" pod both locally and in aws                                           
+└── update_test_results.sh             updates test result data from "ueransim-gnb-ues" pod both locally and in aws
+|
+|
+└── time_to ue_populate_database.txt   local storage file for collecting logs relating to the time it takes for new ues to be registered on the network                                        
 ```
 
