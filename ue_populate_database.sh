@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 set -x # run script in debug mode (see every step of script printed on console)
 set -e # quit script as soon as an error occurs
@@ -49,7 +48,7 @@ ue_populate() {
     local id="$1"
     echo "Running ue_populate with ID: ${id}"
     start_time=$(date +%s.%N)
-    # Assuming you are already inside the pod
+    # command to create UE 
     open5gs-dbctl add_ue_with_slice "$id" 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet 1 111111
     end_time=$(date +%s.%N)
     execution_time=$(echo "$end_time - $start_time" | bc)
