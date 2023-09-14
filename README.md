@@ -12,7 +12,7 @@ Prerequisites:
 
 Steps:
 1. [Mirror](https://docs.gitlab.com/ee/user/project/repository/mirror/) this repository OR connect it [externally](https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/) to Gitlab 
-2. Set up a private Gitlab runner on the CNTF EKS cluster (***Note: You only need to do this process once, not every time you execute code in a different CNTF repository***):
+2. Set up a private Gitlab runner on the CNTF EKS cluster (***Note:*** *You only need to do this process once, this runner can be used by the other CNTF repositories you execute*):
     * In Gitlab, on the left side of the screen, hover over "settings" and select "CI/CD"
     * Next to "Runners" select "expand"
     * Unselect "Enable shared runners for this project"
