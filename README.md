@@ -11,8 +11,9 @@ Prerequisites:
 
 
 Steps:
-1. [Mirror](https://docs.gitlab.com/ee/user/project/repository/mirror/) this repository OR connect it [externally](https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/) to Gitlab 
-2. Set up a private Gitlab runner on the CNTF EKS cluster (***Note:*** *You only need to do this process once, this runner can be used by the other CNTF repositories you execute*):
+1. Create a [Gitlab account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwivrc2D7qqBAxWIlYkEHf0iBigQFnoECBQQAQ&url=https%3A%2F%2Fgitlab.com%2Fusers%2Fsign_up&usg=AOvVaw3DBJ7z7gBPTaP7wwyiUxDg&opi=89978449)
+2. [Mirror](https://docs.gitlab.com/ee/user/project/repository/mirror/) this repository OR connect it [externally](https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/) to Gitlab 
+3. Set up a private Gitlab runner on the CNTF EKS cluster (***Note:*** *You only need to do this process once, this runner can be used by the other CNTF repositories you execute*):
     * In Gitlab, on the left side of the screen, hover over "settings" and select "CI/CD"
     * Next to "Runners" select "expand"
     * Unselect "Enable shared runners for this project"
@@ -31,9 +32,9 @@ Steps:
         * Check to see if your runner is working: "kubectl get pods -n <_NAMESPACE_>" (you should see "1/1" under "READY" and "Running" under "STATUS")
     * In Gitlab, Under "Assigned project runners" you should now see that your runner has a green circle next to it, signaling a "ready" status
 
-3. Authenticate [Gitlab with AWS](https://docs.gitlab.com/ee/ci/cloud_deployment/)
+4. Authenticate [Gitlab with AWS](https://docs.gitlab.com/ee/ci/cloud_deployment/)
 
-4. Run the CI/CD pipeline:
+5. Run the CI/CD pipeline:
     * On the left side of the screen click the drop-down arrow next to "Build" and select "Pipelines"
     * In the top right hand corner select "Run Pipeline"
     * In the drop-down under "Run for branch name or tag" select the appropriate branch name and click "Run Pipeline"
