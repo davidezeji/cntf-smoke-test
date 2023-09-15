@@ -11,9 +11,8 @@ Prerequisites:
 
 
 Steps:
-1. Create a [Gitlab account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwivrc2D7qqBAxWIlYkEHf0iBigQFnoECBQQAQ&url=https%3A%2F%2Fgitlab.com%2Fusers%2Fsign_up&usg=AOvVaw3DBJ7z7gBPTaP7wwyiUxDg&opi=89978449)
-2. [Mirror](https://docs.gitlab.com/ee/user/project/repository/mirror/) this repository OR connect it [externally](https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/) to Gitlab 
-3. Set up a private Gitlab runner on the CNTF EKS cluster (***Note:*** *You only need to do this process once, this runner can be used by the other CNTF repositories you execute*):
+1. [Mirror](https://docs.gitlab.com/ee/user/project/repository/mirror/) this repository OR connect it [externally](https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/) to Gitlab 
+2. Set up a private Gitlab runner on the CNTF EKS cluster (***Note:*** *You only need to do this process once, this runner can be used by the other CNTF repositories you execute*):
     * In Gitlab, on the left side of the screen, hover over "settings" and select "CI/CD"
     * Next to "Runners" select "expand"
     * Unselect "Enable shared runners for this project"
@@ -35,9 +34,9 @@ Steps:
         * Hover over "Settings" and select "CI/CD"
         * Under "Other available runners", find the runner you have created and select "Enable for this project"
 
-4. Authenticate [Gitlab with AWS](https://docs.gitlab.com/ee/ci/cloud_deployment/)
+3. Authenticate [Gitlab with AWS](https://docs.gitlab.com/ee/ci/cloud_deployment/)
 
-5. Run the CI/CD pipeline:
+4. Run the CI/CD pipeline:
     * On the left side of the screen click the drop-down arrow next to "Build" and select "Pipelines"
     * In the top right hand corner select "Run Pipeline"
     * In the drop-down under "Run for branch name or tag" select the appropriate branch name and click "Run Pipeline"
@@ -45,10 +44,10 @@ Steps:
 
 ## Pipeline Stages
 Goal of each stage in the pipeline (refer to ".gitlab-ci.yml" for more details):
-* subscribe - subscribes one UE to the network
-* test - perform curls over network interfaces and ethernet
-* update_tests - update test results locally and in AWS
-* cleanup - removes create UE subscription from network database
+* "subscribe" - subscribes one UE to the network
+* "test" - perform curls over network interfaces and ethernet
+* "update_tests" - update test results locally and in AWS
+* "cleanup" - removes create UE subscription from network database
 
 ## Coralogix Dashboards
 To view parsed & visualized data resulting from tests run by various CNTF repositories, please visit CNTF's dedicated Coralogix tenant: https://dish-wireless-network.atlassian.net/wiki/spaces/MSS/pages/509509825/Coralogix+CNTF+Dashboards 
