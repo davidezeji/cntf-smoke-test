@@ -1,7 +1,7 @@
 # CNTF - Smoke Test
 
 ## Purpose
-This source code repository stores the configurations to subscribe and connect a new UE to the 5g network and make multiple HTTP requests to webservers. This test will simulate HTTP requests being made while the UE is both connected & disconnected from the 5g network. This gives baseline insights to how well data is sent/received by using the network vs without using the network.
+This source code repository stores the configurations to subscribe and connect a new UE to a 5g network and make multiple HTTP requests to webservers. This test will emulate HTTP requests across both 5G network and Ethernet interfaces, providing valuable baseline comparisons into the efficiency of data transmission and reception through these two mediums.
 
 ## Deployment
 Prerequisites:
